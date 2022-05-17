@@ -1,7 +1,7 @@
 import React, { useEffect,useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Navbar from "../../components/Navbar";
-import { getBlogs, setEditBlog } from "../../features/blog/blogSlice";
+import { getBlogs, setEditBlog,deleteBlog } from "../../features/blog/blogSlice";
 import moment from 'moment';
 import { Link } from "react-router-dom";
 
@@ -10,8 +10,6 @@ const Home = () => {
   const { blogs, isLoading, editBlogId } = useSelector((state) => state.blog);
 
 
-  const [currentId, setCurrentId] = useState(null);
-
   const dispatch = useDispatch();
 
   console.log(blogs);
@@ -19,6 +17,7 @@ const Home = () => {
   useEffect(() => {
     dispatch(getBlogs());
   }, [dispatch]);
+
   if (isLoading) {
     return <>
       <h1>Loading...</h1>
@@ -28,7 +27,7 @@ const Home = () => {
   return <div>
     <Navbar />
     Home
-    {
+    {blogs.length=== 0 ? <div>NO Data</div>:
       blogs.map((item) =>{
         return (
           <ul key={ item._id} >
@@ -45,7 +44,8 @@ const Home = () => {
               <Link to='/create'>
                   Edit
               </Link>
-              </button>
+            </button>
+            <button onClick={()=> dispatch(deleteBlog(item._id))}>Delete</button>
           </ul>
         )
       })

@@ -16,27 +16,35 @@ export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
 });
 
 export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
-  
   return await axios
-    .post(`${url}/blog/`,data)
+    .post(`${url}/blog/`, data)
     .then((resp) => console.log(resp.data))
     .catch((err) => console.log(err));
 });
 
-export const updateBlog = createAsyncThunk(`blog/updateBlog`, async (id, data) => {
-  console.log(data);
-   return await axios
-     .patch(`${url}/blog/${id}`, data)
-     .then((resp) => console.log(`Updated SuccessFully ${resp}`))
-     .catch((err) => console.log(err));
-})
+export const updateBlog = createAsyncThunk(
+  `blog/updateBlog`,
+  async (id, updateBlog) => {
+    return await axios
+      .patch(`${url}/blog/${id}`, updateBlog)
+      .then((resp) => console.log(`Updated SuccessFully ${resp}`))
+      .catch((err) => console.log(err));
+  }
+);
+
+export const deleteBlog = createAsyncThunk(`blog/deleteBlog`, async (id) => {
+  return await axios
+    .delete(`${url}/blog/${id}`)
+    .then(() => console.log("Blog Deleted"))
+    .catch((err) => console.log(err));
+});
 
 const initialState = {
   blogs: [],
   blog: {},
   isLoading: true,
-  editBlogId: '',
-  isEditing:false,
+  editBlogId: "",
+  isEditing: false,
 };
 
 export const blogSlice = createSlice({
@@ -44,8 +52,8 @@ export const blogSlice = createSlice({
   initialState,
   reducers: {
     setEditBlog: (state, action) => {
-      return {...state,isEditing:true,...action.payload}
-    }
+      return { ...state, isEditing: true, ...action.payload };
+    },
   },
   extraReducers: {
     [getBlogs.pending]: (state) => {
@@ -75,20 +83,23 @@ export const blogSlice = createSlice({
       state.isLoading = false;
       state.blogs = action.payload;
     },
-    [updateBlog.fulfilled]: (state, action) => {
-       console.log(action);
-       console.log(action.payload);
-       console.log("FullFilled Update Blog", action.payload);
+    [updateBlog.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [updateBlog.fulfilled]: (state, { payload }) => {
+      console.log("FullFilled Update Blog", payload);
       state.isLoading = false;
-      // state.blogs = state.blogs.map((blog) =>
-      //   blog._id === action.payload._id ? action.payload : blog
-      // );
-      const blogId = state.findIndex((blog) => blog._id === action.payload._id);
-      state.blogs[blogId] = {
-        ...state.blogs[blogId],
-        ...action.payload,
-      }
-    }
+      state.blogs.map((blog) => {
+        return blog._id === payload._id ? payload : blog;
+      });
+      console.log(`Blog Modified!`);
+    },
+    [updateBlog.rejected]: (state) => {
+      state.isLoading = true;
+    },
+    [deleteBlog.fulfilled]: (state) => {
+      state.isLoading = false;
+    },
   },
 });
 

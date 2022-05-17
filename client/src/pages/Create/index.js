@@ -12,14 +12,14 @@ const Create = () => {
   });
 
   const blogId = useSelector((state) => state.blog.editBlogId);
-  console.log(blogId);
+  // console.log(blogId);
 
   const b = useSelector((state) =>
     state.blog.editBlogId
       ? state.blog.blogs.find((main) => main._id === blogId)
       : null
   );
-  console.log(b);
+  // console.log(b);
 
   const dispatch = useDispatch();
 
@@ -29,13 +29,14 @@ const Create = () => {
 
   const handleClick = (e) => {
     e.preventDefault();
-    console.log(blogId, blogData);
+    // console.log(blogId, blogData);
     if (!b) {
       dispatch(createBlog(blogData));
-      console.log(blogData);
+      // console.log(blogData);
     } else {
-      console.log(blogId, blogData);
+      // console.log(blogId, blogData);
       dispatch(updateBlog(blogId, blogData));
+      
     }
   };
 
