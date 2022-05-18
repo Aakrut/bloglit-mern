@@ -1,4 +1,5 @@
 import { Routes, Route } from "react-router-dom";
+
 import { Home, Search, Create, UserProfile, SharedLayout } from "./pages";
 
 function App() {
@@ -9,6 +10,7 @@ function App() {
         <Route path="/search" element={<Search />} />
         <Route path="/create" element={<Create />} />
         <Route path="/user" element={<UserProfile />} />
+   
       </Routes>
     </div>
   );

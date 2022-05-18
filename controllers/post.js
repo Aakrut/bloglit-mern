@@ -35,10 +35,10 @@ const getPost = async (req, res) => {
 
 // Update Blog By Id
 const updatePost = async (req, res) => {
-  const { id: updatePostId } = req.params;
+  const { id } = req.params;
 
   try {
-    const blog = await Blog.findByIdAndUpdate({ _id: updatePostId }, req.body, {
+    const blog = await Blog.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
     });
     res.status(StatusCodes.CREATED).json(blog);
@@ -49,9 +49,9 @@ const updatePost = async (req, res) => {
 
 // Delete Blog By Id
 const deletePost = async (req, res) => {
-  const { id: deletePostId } = req.params;
+  const { id } = req.params;
   try {
-    const blog = await Blog.findByIdAndDelete({ _id: deletePostId });
+    const blog = await Blog.findByIdAndDelete({ _id: id });
     res.status(StatusCodes.OK).json(blog);
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);

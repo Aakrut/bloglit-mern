@@ -11,11 +11,15 @@ const Create = () => {
     image: "",
   });
 
+  const blog = useSelector((store) => store.blog);
+  // console.log(blog)
+
   const blogId = useSelector((state) => state.blog.editBlogId);
   // console.log(blogId);
 
   const b = useSelector((state) =>
     state.blog.editBlogId
+    // blogId
       ? state.blog.blogs.find((main) => main._id === blogId)
       : null
   );
@@ -30,14 +34,29 @@ const Create = () => {
   const handleClick = (e) => {
     e.preventDefault();
     // console.log(blogId, blogData);
-    if (!b) {
-      dispatch(createBlog(blogData));
-      // console.log(blogData);
-    } else {
-      // console.log(blogId, blogData);
-      dispatch(updateBlog(blogId, blogData));
+    // if (!b) {
+    //   dispatch(createBlog(blogData));
+    //   // console.log(blogData);
+    // } else {
+    //   // console.log(blogId, blogData);
+    //   dispatch(updateBlog(blogId, blogData));
       
+    // }
+
+    if (b) {
+    
+      dispatch(updateBlog({
+        blogID: blogId,
+        blog : blogData
+      }));
+      return;
+    } else {
+      dispatch(createBlog(blogData));
+      return;
     }
+
+
+
   };
 
   return (

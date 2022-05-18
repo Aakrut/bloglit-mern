@@ -24,9 +24,9 @@ export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
 
 export const updateBlog = createAsyncThunk(
   `blog/updateBlog`,
-  async (id, updateBlog) => {
+  async ({ blogID, blog }) => {
     return await axios
-      .patch(`${url}/blog/${id}`, updateBlog)
+      .patch(`${url}/blog/${blogID}`, blog)
       .then((resp) => console.log(`Updated SuccessFully ${resp}`))
       .catch((err) => console.log(err));
   }
@@ -77,28 +77,44 @@ export const blogSlice = createSlice({
       state.blog = action.payload;
     },
     [createBlog.fulfilled]: (state, action) => {
-      console.log(action);
-      console.log(action.payload);
-      console.log("FullFilled Post Blog", action.payload);
+      // console.log(action);
+      // console.log(action.payload);
+      // console.log("FullFilled Post Blog", action.payload);
       state.isLoading = false;
       state.blogs = action.payload;
+      // return {
+      //   ...state,
+      //   blogs: [action.payload, ...state.blogs],
+      //   isLoading: (state.isLoading = false),
+      // };
     },
     [updateBlog.pending]: (state) => {
       state.isLoading = true;
     },
-    [updateBlog.fulfilled]: (state, { payload }) => {
-      console.log("FullFilled Update Blog", payload);
+    [updateBlog.fulfilled]: (state, action) => {
+      // const editBlog = state.blogs.map((b) => b._id === action.payload._id ? action.payload : b)
+
+      // return {
+      //   ...state,
+      //   blogs: editBlog,
+      // };
+
       state.isLoading = false;
-      state.blogs.map((blog) => {
-        return blog._id === payload._id ? payload : blog;
-      });
-      console.log(`Blog Modified!`);
     },
     [updateBlog.rejected]: (state) => {
       state.isLoading = true;
     },
-    [deleteBlog.fulfilled]: (state) => {
+    [deleteBlog.pending]: (state) => {
+      state.isLoading = true;
+      console.log("Pending");
+    },
+    [deleteBlog.fulfilled]: (state, action) => {
       state.isLoading = false;
+      state.blogs = action.payload;
+    },
+    [deleteBlog.rejected]: (state, action) => {
+      state.isLoading = false;
+      state.blogs = action.payload;
     },
   },
 });

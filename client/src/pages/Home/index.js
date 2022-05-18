@@ -12,8 +12,6 @@ const Home = () => {
 
   const dispatch = useDispatch();
 
-  console.log(blogs);
-
   useEffect(() => {
     dispatch(getBlogs());
   }, [dispatch]);
@@ -27,27 +25,32 @@ const Home = () => {
   return <div>
     <Navbar />
     Home
-    {blogs.length=== 0 ? <div>NO Data</div>:
-      blogs.map((item) =>{
+    {
+      blogs?.map((blog) =>{
         return (
-          <ul key={ item._id} >
-            <li>{item._id }</li>
-            <li>{item.title }</li>
-            <li>{item.createdBy }</li>
-            <li>{item.desc }</li>
-            <li>{item.image }</li>
-            <li>{moment(item.createdAt).format('MM DD, YYYY')}</li>
-            <button onClick={() => {
-              dispatch(setEditBlog({
-                editBlogId: item._id,
-            }))} }>
-              <Link to='/create'>
-                  Edit
-              </Link>
+          <ul key={blog._id}>
+            <li>{blog._id}</li>
+            <li>{blog.title}</li>
+            <li>{blog.createdBy}</li>
+            <li>{blog.desc}</li>
+            <li>{blog.image}</li>
+            <li>{moment(blog.createdAt).format("MM DD, YYYY")}</li>
+            <button
+              onClick={() => {
+                dispatch(
+                  setEditBlog({
+                    editBlogId: blog._id,
+                  })
+                );
+              }}
+            >
+              <Link to="/create">Edit</Link>
             </button>
-            <button onClick={()=> dispatch(deleteBlog(item._id))}>Delete</button>
+            <button onClick={() => dispatch(deleteBlog(blog._id))}>
+              Delete
+            </button>
           </ul>
-        )
+        );
       })
     }
   </div>;
