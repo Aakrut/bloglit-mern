@@ -70,7 +70,7 @@ const likePost = async (req, res) => {
         new: true,
       }
     );
-    res.status(StatusCodes.CREATED).json(blog);
+    res.status(StatusCodes.CREATED).json({blog});
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
   }
