@@ -9,7 +9,9 @@ const cors = require('cors');
 const databaseConnection = require('./db/connect');
 
 //Routes
+const authRoute = require('./routes/userRoute');
 const PostRoute = require('./routes/postRoute');
+
 
 const app = express();
 app.use(express.json());
@@ -19,6 +21,7 @@ app.get('/', (req, res) => {
     res.send('Welcome 😁!')
 })
 
+app.use('/api/v1/auth', authRoute);
 app.use('/api/v1/blog', PostRoute);
 
 const port = process.env.PORT || 5000;
