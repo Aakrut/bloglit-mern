@@ -66,6 +66,14 @@ const BackButton = styled(Link)`
   font-family: "Poppins", sans-serif;
   color: black;
   font-weight: 600;
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    transform: translate(0, -5px);
+    color: white;
+    background: black;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.5);
+  }
 
   @media only screen and (min-width: 640px) {
     font-size: 18px;

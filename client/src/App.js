@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import { Home, Search, Create, UserProfile, SharedLayout,Error,LandingPage } from "./pages";
+import { Home, Search, Create, UserProfile, SharedLayout,Error,LandingPage,Register } from "./pages";
 
 
 function App() {
@@ -12,6 +12,7 @@ function App() {
         <Route path="/create" element={<Create />} />
         <Route path="/user" element={<UserProfile />} /> */}
         <Route path="/" element={<LandingPage /> }/>
+        <Route path="register" element={<Register /> }/>
         <Route path='*' element={ <Error />}/>
    
       </Routes>

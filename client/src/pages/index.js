@@ -5,6 +5,7 @@ import UserProfile from './UserProfile';
 import SharedLayout from './SharedLayout';
 import Error from './Error';
 import LandingPage from './LandingPage';
+import Register from './Register';
 
 
-export { Home, Search, Create, UserProfile,SharedLayout,Error ,LandingPage};
+export { Home, Search, Create, UserProfile,SharedLayout,Error ,LandingPage,Register};

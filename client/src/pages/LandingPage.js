@@ -13,7 +13,7 @@ const LandingPage = () => {
           <Detail>
             Share Your Stories & Ideas with Others by Joining Our BlogLit.
           </Detail>
-          <Button to="/signup">Log In / Sign Up</Button>
+          <Button to="/register">Log In / Sign Up</Button>
         </MainWrapper>
 
         <ImageWrapper>
@@ -127,4 +127,11 @@ const Button = styled(Link)`
 
   text-decoration: none;
   color: white;
+  transition:all 0.3s ease-in-out ;
+  
+
+  &:hover {
+    box-shadow: 0px 10px 20px rgba(57, 159, 253, 0.5);
+    transform:translate(0,-5px) ;
+  }
 `;
