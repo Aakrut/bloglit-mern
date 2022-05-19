@@ -1,5 +1,5 @@
-const { StatusCodes } = require("http-status-codes");
-const Blog = require("../models/post");
+import  { StatusCodes } from "http-status-codes";
+import Blog from "../models/post.js";
 
 // Get All Blog Posts
 const getAllPosts = async (req, res) => {
@@ -76,7 +76,7 @@ const likePost = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   getAllPosts,
   createPost,
   getPost,

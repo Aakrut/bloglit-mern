@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const BlogSchema = new mongoose.Schema({
     createdBy: {
@@ -28,4 +28,4 @@ const BlogSchema = new mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Blogs', BlogSchema);
+export default mongoose.model('Blogs', BlogSchema);

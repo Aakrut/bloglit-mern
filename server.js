@@ -1,32 +1,39 @@
-const express = require("express");
+import express from 'express';
 
-require("dotenv").config();
+import dotenv from 'dotenv';
+dotenv.config();
 
 // cors
-const cors = require("cors");
 
 //Database Connection
-const databaseConnection = require("./db/connect");
+import databaseConnection from './db/connect.js';
+// const databaseConnection = require("./db/connect");
 
 //Middleware
-const notFoundMiddleware = require("./middlewares/not-found");
-const errorHandlerMiddleware = require("./middlewares/error-handler");
-const authenticateUser = require('./middlewares/auth');
+import notFoundMiddleware from './middlewares/not-found.js';
+import errorHandlerMiddleware from './middlewares/error-handler.js';
+import authenticateUser from './middlewares/auth.js';
+
+// const notFoundMiddleware = require("./middlewares/not-found");
+// const errorHandlerMiddleware = require("./middlewares/error-handler");
+// const authenticateUser = require('./middlewares/auth');
 
 //Routes
-const authRoute = require("./routes/userRoute");
-const PostRoute = require("./routes/postRoute");
+import authRoute from './routes/userRoute.js';
+import postRoute from './routes/postRoute.js'
+// const authRoute = require("./routes/userRoute");
+// const PostRoute = require("./routes/postRoute");
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+// app.use(cors());
 
 app.get("/", (req, res) => {
   res.send("Welcome 😁!");
 });
 
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/blog",authenticateUser, PostRoute);
+app.use("/api/v1/blog",authenticateUser, postRoute);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

@@ -1,12 +1,12 @@
-const { UnAuthenticatedError } = require("../errors/index");
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
+import { UnAuthenticatedError } from "../errors/index.js";
 
 const auth = async (req, res, next) => {
   // const headers = req.headers
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith("Bearer")) {
-    throw new Error("Authentication Invalid");
+    throw new UnAuthenticatedError("Authentication Invalid");
   }
 
   const token = authHeader.split(" ")[1];
@@ -18,10 +18,10 @@ const auth = async (req, res, next) => {
     req.user = { userId: payload.userId };
     // req.user = payload;
   } catch (error) {
-    console.log(error);
+    throw new UnAuthenticatedError('Authentication Invalid!');
   }
 
   next();
 };
 
-module.exports = auth;
+export default auth;

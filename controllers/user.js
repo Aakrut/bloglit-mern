@@ -1,8 +1,8 @@
-const User = require("../models/user");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const { StatusCodes } = require("http-status-codes");
-const { BadRequestError, UnAuthenticatedError } = require("../errors");
+import User from "../models/user.js";
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import  { StatusCodes } from "http-status-codes";
+import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
 
 const register = async (req, res) => {
   const { username, email, password, fullName } = req.body;
@@ -18,23 +18,22 @@ const register = async (req, res) => {
     }
 
     const salt = await bcrypt.genSalt(10);
-
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const user = await User.create({
       username,
       fullName,
       email,
-      password: hashedPassword,
+      password:hashedPassword,
     });
 
-    const token = jwt.sign(
-      { userId: user._id, userEmail: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: process.env.JWT_LIFETIME }
-    );
+     const token = jwt.sign(
+       { userId: user._id, userEmail: user.email },
+       process.env.JWT_SECRET,
+       { expiresIn: process.env.JWT_LIFETIME }
+     );
 
-    // user.password = undefined;
+    user.password = undefined;
 
     res.status(StatusCodes.CREATED).json({ user, token });
   } catch (error) {
@@ -54,7 +53,7 @@ const login = async (req, res) => {
 
     if (!isEmail) return "Please Provide Email";
 
-    const user = await User.findOne({ email: email });
+    const user = await User.findOne({ email: email }).select('+password');
 
     if (!user) {
       throw new UnAuthenticatedError("Invalid Credentials");
@@ -110,4 +109,4 @@ const updateUser = async (req, res) => {
   }
 };
 
-module.exports = { register, login, updateUser };
+export { register, login, updateUser };
