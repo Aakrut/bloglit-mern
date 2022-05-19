@@ -1,6 +1,10 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FormRow from "../components/FormRow";
+import { toast } from 'react-toastify';
+import { useSelector, useDispatch } from 'react-redux';
+import { loginUser, registerUser } from "../features/user/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const initialState = {
   username: "",
@@ -13,6 +17,12 @@ const initialState = {
 const Register = () => {
   const [values, setValues] = useState(initialState);
 
+  const { isLoading, user } = useSelector((state) => state.user);
+
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
   const toggleMember = () => {
     setValues({ ...values, isMember: !values.isMember });
   };
@@ -21,13 +31,37 @@ const Register = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
+  const onSubmit = (e) => {
+    e.preventDefault();
+    const { username, email, password, fullName,isMember } = values;
+
+    if (!email || !password || (!isMember && !username) || (!isMember && !fullName)) {
+      
+      toast.error("Please Provide All Fields.");
+      return;
+    }
+    if (isMember) {
+      dispatch(loginUser({ email: email, password: password }));
+      return;
+    }
+    dispatch(registerUser({ username,fullName,email,password }));
+  };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/');
+      }, 3000);
+    }
+  }, [user, navigate]);
+
   return (
     <Wrapper>
       <ContentWrapper>
-        <form className="form" onSubmit={() => {}}>
+        <form className="form" onSubmit={onSubmit}>
           <Main>
             <Title>BlogLit</Title>
-            <h3>{values.isMember ? 'Login':'Register'}</h3>
+            <h3>{values.isMember ? "Login" : "Register"}</h3>
           </Main>
 
           <Fields>
@@ -66,7 +100,7 @@ const Register = () => {
               value={values.password}
               handleChange={handleChange}
             />
-            <button className="btn-login">
+            <button type="submit" className="btn-login">
               {values.isMember ? "Login" : "Register"}
             </button>
             <p>
@@ -146,6 +180,18 @@ const Fields = styled.div`
     border: none;
     border-radius: 5px;
     margin: 10px 0;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+  }
+
+  input:focus {
+    color: black;
+    font-weight: 400;
+    font-family: "Poppins", sans-serif;
+  }
+
+  input::placeholder {
+    font-family: "Poppins", sans-serif;
   }
 
   .btn-login {
