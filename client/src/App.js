@@ -4,13 +4,20 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { Home, Search, Create, UserProfile, SharedLayout } from "./pages/Main/index";
 
-import { Error, LandingPage, Register } from "./pages";
+import { Error, LandingPage, Register,ProtectedRoute } from "./pages";
 
 function App() {
   return (
     <div className="App">
       <Routes>
-        <Route path="/" element={<SharedLayout />}>
+        <Route
+          path="/"
+          element={
+            <ProtectedRoute>
+              <SharedLayout />
+            </ProtectedRoute>
+          }
+        >
           <Route index element={<Home />} />
           <Route path="/search" element={<Search />} />
           <Route path="/create" element={<Create />} />

@@ -71,7 +71,7 @@ const login = async (req, res) => {
 
     user.password = undefined;
 
-    res.status(StatusCodes.CREATED).json({ user, token });
+    res.status(StatusCodes.OK).json({ user, token });
   } catch (error) {
     res.send(error);
   }
