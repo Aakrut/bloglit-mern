@@ -1,7 +1,7 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import  { StatusCodes } from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 import { BadRequestError, UnAuthenticatedError } from "../errors/index.js";
 
 const register = async (req, res) => {
@@ -24,14 +24,14 @@ const register = async (req, res) => {
       username,
       fullName,
       email,
-      password:hashedPassword,
+      password: hashedPassword,
     });
 
-     const token = jwt.sign(
-       { userId: user._id, userEmail: user.email },
-       process.env.JWT_SECRET,
-       { expiresIn: process.env.JWT_LIFETIME }
-     );
+    const token = jwt.sign(
+      { userId: user._id, username:user.username,userEmail: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_LIFETIME }
+    );
 
     user.password = undefined;
 
@@ -53,7 +53,7 @@ const login = async (req, res) => {
 
     if (!isEmail) return "Please Provide Email";
 
-    const user = await User.findOne({ email: email }).select('+password');
+    const user = await User.findOne({ email: email }).select("+password");
 
     if (!user) {
       throw new UnAuthenticatedError("Invalid Credentials");
@@ -64,7 +64,7 @@ const login = async (req, res) => {
     if (!comparePass) return "Invalid Credentials";
 
     const token = jwt.sign(
-      { userId: user._id, userEmail: user.email },
+      { userId: user._id,username:user.username, userEmail: user.email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_LIFETIME }
     );
@@ -98,7 +98,7 @@ const updateUser = async (req, res) => {
     );
 
     const token = jwt.sign(
-      { userId: user._id, userEmail: user.email },
+      { userId: user._id,username:user.username, userEmail: user.email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_LIFETIME }
     );

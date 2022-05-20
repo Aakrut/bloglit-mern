@@ -2,9 +2,11 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import axios from "axios";
 import {
+  addTokenToLocalStorage,
   addUserToLocalStorage,
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
+  getTokenFromLocalStorage,
 } from "../../utils/localStorage";
 
 export const registerUser = createAsyncThunk(
@@ -31,6 +33,25 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const updateUser = createAsyncThunk(
+  "user/updateUser",
+  async (user, thunkAPI) => {
+    // console.log(thunkAPI.getState());
+    try {
+      const resp = await axios.patch("/api/v1/auth/user", user, {
+        headers: {
+          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      });
+
+      return resp.data;
+    } catch (error) {
+      console.log(error.response);
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 const initialState = {
   isLoading: false,
   isSidebarOpen: false,
@@ -47,17 +68,18 @@ const userSlice = createSlice({
     },
     toggleSidebar: (state) => {
       state.isSidebarOpen = !state.isSidebarOpen;
-    }
+    },
   },
   extraReducers: {
     [registerUser.pending]: (state) => {
       state.isLoading = true;
     },
     [registerUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
+      const { user, token } = payload;
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
+      addTokenToLocalStorage(token);
       toast.success(`Hello There ${user.username}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
@@ -68,13 +90,30 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [loginUser.fulfilled]: (state, { payload }) => {
-      const { user } = payload;
+      const { user, token } = payload;
+      console.log(user, token);
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
+      addTokenToLocalStorage(token);
       toast.success(`Welcome Back! ${user.username}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
+    },
+    [updateUser.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [updateUser.fulfilled]: (state, { payload }) => {
+      const { user, token } = payload;
+      state.isLoading = false;
+      state.user = user;
+      addUserToLocalStorage(user);
+      addTokenToLocalStorage(token);
+      toast.success(`Your Profile Updated! ${user.username}`);
+    },
+    [updateUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload);
     },

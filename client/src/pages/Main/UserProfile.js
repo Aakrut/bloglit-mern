@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import FormRow from "../../components/FormRow";
-import { logoutUser } from "../../features/user/userSlice";
+import { logoutUser, updateUser } from "../../features/user/userSlice";
 import FileBase64 from "react-file-base64";
+import { toast } from 'react-toastify';
 
 const UserProfile = () => {
   const { user } = useSelector((state) => state.user);
@@ -24,6 +25,13 @@ const UserProfile = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    const { username, fullName, email, bio, avatar } = userData;
+
+    if (!username || !email || !fullName || !bio || !avatar) {
+      toast.error('PLease Provide All Fields.');
+      return;
+    }
+    dispatch(updateUser({ username, avatar, bio, fullName }));
     console.log(userData);
   };
 
@@ -53,14 +61,6 @@ const UserProfile = () => {
             />
 
             <FormRow
-              type="email"
-              placeholder="email"
-              name="email"
-              value={userData.email}
-              handleChange={handleChange}
-            />
-
-            <FormRow
               type="text"
               placeholder="bio"
               name="bio"
@@ -74,6 +74,7 @@ const UserProfile = () => {
               multiple={false}
               name="myFile"
               accept=".jpeg, .png, .jpg"
+              value={userData.avatar}
               onDone={({ base64 }) =>
                 setDataUser({ ...userData, avatar: base64 })
               }
