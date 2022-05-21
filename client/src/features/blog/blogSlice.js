@@ -9,11 +9,28 @@ import {
 
 // const url = "http://localhost:5000/api/v1";
 
-export const getBlogs = createAsyncThunk("blog/getBlogs", async () => {
-  return await fetch(`/api/v1/blog/`)
-    .then((resp) => resp.json())
-    .catch((err) => console.log(err));
-});
+// export const getBlogs = createAsyncThunk("blog/getBlogs", async (_,thunkAPI) => {
+//   return await fetch(`/api/v1/blog/`)
+//     .then((resp) => resp.json())
+//     .catch((err) => console.log(err));
+// });
+
+export const getBlogs = createAsyncThunk(
+  "blog/getBlogs",
+  async (_, thunkAPI) => {
+    try {
+      const resp = await axios.get(`/api/v1/blog/`, {
+        headers: {
+          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      });
+
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
 
 export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
   return await fetch(`/api/v1/blog/${id}`)
@@ -31,7 +48,6 @@ export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
 export const createBlog = createAsyncThunk(
   `blog/createBlog`,
   async (blog, thunkAPI) => {
-    console.log(blog);
 
     try {
       const resp = await axios.post("/api/v1/blog", blog, {
@@ -39,10 +55,9 @@ export const createBlog = createAsyncThunk(
           authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       });
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
-      // return thunkAPI.rejectWithValue(error.response.data.msg);
+
 
       if (error.response.status === 401) {
         removeUserFromLocalStorage();
@@ -93,17 +108,14 @@ export const blogSlice = createSlice({
   extraReducers: {
     [getBlogs.pending]: (state) => {
       state.isLoading = true;
-      console.log("Pending");
     },
     [getBlogs.fulfilled]: (state, action) => {
-      console.log(action);
-      console.log("FullFilled", action.payload);
       state.isLoading = false;
       state.blogs = action.payload;
     },
-    [getBlogs.rejected]: (state) => {
-      console.log("Rejected");
+    [getBlogs.rejected]: (state, { payload }) => {
       state.isLoading = false;
+      toast.error(payload);
     },
     [getBlog.fulfilled]: (state, action) => {
       console.log(action);
@@ -119,7 +131,8 @@ export const blogSlice = createSlice({
       // console.log(action.payload);
       // console.log("FullFilled Post Blog", action.payload);
       state.isLoading = false;
-      state.blogs = action.payload;
+      // state.blogs = action.payload;
+      state.blogs = [action.payload, ...state.blogs];
       toast.success("Your Blog Published SuccessFully!");
       // return {
       //   ...state,
