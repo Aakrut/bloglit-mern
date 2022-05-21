@@ -2,9 +2,10 @@ import { Routes, Route } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { Home, Search, Create, UserProfile, SharedLayout } from "./pages/Main/index";
+import { Home, Search, Create, UserProfile, SharedLayout,Blog } from "./pages/Main/index";
 
 import { Error, LandingPage, Register,ProtectedRoute } from "./pages";
+
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         >
           <Route index element={<Home />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/blog/:id" element={<Blog />} />
           <Route path="/create" element={<Create />} />
           <Route path="/user" element={<UserProfile />} />
         </Route>

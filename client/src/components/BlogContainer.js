@@ -18,7 +18,7 @@ const BlogContainer = (blog) => {
           {blog.blog.desc.substring(0, 120)}
           ...
         </p>
-        <Button to="/create">Continue Reading</Button>
+        <Button to={`/blog/${blog.blog._id}`}>Continue Reading</Button>
       </DetailWrapper>
     </Wrapper>
   );

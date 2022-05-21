@@ -1,4 +1,4 @@
-import  { StatusCodes } from "http-status-codes";
+import { StatusCodes } from "http-status-codes";
 import Blog from "../models/post.js";
 
 // Get All Blog Posts
@@ -13,12 +13,10 @@ const getAllPosts = async (req, res) => {
 
 // Create Blog Post
 const createPost = async (req, res) => {
-
   const { title, desc, image } = req.body;
   try {
-
     req.body.createdBy = req.user.userId;
-    
+
     const blog = await Blog.create(req.body);
     res.status(StatusCodes.CREATED).json(blog);
   } catch (error) {
@@ -31,7 +29,10 @@ const getPost = async (req, res) => {
   const { id: postId } = req.params;
 
   try {
-    const blog = await Blog.findById({ _id: postId });
+    const blog = await Blog.findById({ _id: postId }).populate(
+      "createdBy",
+      "username fullName email avatar _id"
+    );
     res.status(StatusCodes.OK).json(blog);
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
@@ -75,17 +76,10 @@ const likePost = async (req, res) => {
         new: true,
       }
     );
-    res.status(StatusCodes.CREATED).json({blog});
+    res.status(StatusCodes.CREATED).json({ blog });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
   }
 };
 
-export {
-  getAllPosts,
-  createPost,
-  getPost,
-  updatePost,
-  deletePost,
-  likePost,
-};
+export { getAllPosts, createPost, getPost, updatePost, deletePost, likePost };
