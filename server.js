@@ -25,7 +25,9 @@ import postRoute from './routes/postRoute.js'
 // const PostRoute = require("./routes/postRoute");
 
 const app = express();
-app.use(express.json());
+// app.use(express.json());
+app.use(express.json({ limit: '30mb', extended: true }));
+app.use(express.urlencoded({ limit: '30mb', extended: true }));
 // app.use(cors());
 
 app.get("/", (req, res) => {
@@ -33,7 +35,8 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/v1/auth", authRoute);
-app.use("/api/v1/blog",authenticateUser, postRoute);
+app.use("/api/v1/blog", authenticateUser, postRoute);
+
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);

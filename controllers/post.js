@@ -13,7 +13,12 @@ const getAllPosts = async (req, res) => {
 
 // Create Blog Post
 const createPost = async (req, res) => {
+
+  const { title, desc, image } = req.body;
   try {
+
+    req.body.createdBy = req.user.userId;
+    
     const blog = await Blog.create(req.body);
     res.status(StatusCodes.CREATED).json(blog);
   } catch (error) {

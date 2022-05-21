@@ -1,48 +1,83 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
+import { toast } from "react-toastify";
+import {
+  removeTokenFromLocalStorage,
+  removeUserFromLocalStorage,
+  getTokenFromLocalStorage,
+} from "../../utils/localStorage";
 
-const url = "http://localhost:5000/api/v1";
+// const url = "http://localhost:5000/api/v1";
 
 export const getBlogs = createAsyncThunk("blog/getBlogs", async () => {
-  return await fetch(`${url}/blog/`)
+  return await fetch(`/api/v1/blog/`)
     .then((resp) => resp.json())
     .catch((err) => console.log(err));
 });
 
 export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
-  return await fetch(`${url}/blog/${id}`)
+  return await fetch(`/api/v1/blog/${id}`)
     .then((resp) => resp.json())
     .catch((err) => console.log(err));
 });
 
-export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
-  return await axios
-    .post(`${url}/blog/`, data)
-    .then((resp) => console.log(resp.data))
-    .catch((err) => console.log(err));
-});
+// export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
+//   return await axios
+//     .post(`${url}/blog/`, data)
+//     .then((resp) => console.log(resp.data))
+//     .catch((err) => console.log(err));
+// });
+
+export const createBlog = createAsyncThunk(
+  `blog/createBlog`,
+  async (blog, thunkAPI) => {
+    console.log(blog);
+
+    try {
+      const resp = await axios.post("/api/v1/blog", blog, {
+        headers: {
+          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      });
+      console.log(resp.data);
+      return resp.data;
+    } catch (error) {
+      // return thunkAPI.rejectWithValue(error.response.data.msg);
+
+      if (error.response.status === 401) {
+        removeUserFromLocalStorage();
+        removeTokenFromLocalStorage();
+        return thunkAPI.rejectWithValue("Unauthorized! Logging Out");
+      }
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
 
 export const updateBlog = createAsyncThunk(
   `blog/updateBlog`,
-  async ({ blogID, blog }) => {
+  async ({ blogID, blog }, thunkAPI) => {
     return await axios
-      .patch(`${url}/blog/${blogID}`, blog)
+      .patch(`/api/v1/blog/${blogID}`, blog)
       .then((resp) => console.log(`Updated SuccessFully ${resp}`))
       .catch((err) => console.log(err));
   }
 );
 
-export const deleteBlog = createAsyncThunk(`blog/deleteBlog`, async (id) => {
-  return await axios
-    .delete(`${url}/blog/${id}`)
-    .then(() => console.log("Blog Deleted"))
-    .catch((err) => console.log(err));
-});
+export const deleteBlog = createAsyncThunk(
+  `blog/deleteBlog`,
+  async (id, thunkAPI) => {
+    return await axios
+      .delete(`/api/v1/blog/${id}`)
+      .then(() => console.log("Blog Deleted"))
+      .catch((err) => console.log(err));
+  }
+);
 
 const initialState = {
   blogs: [],
   blog: {},
-  isLoading: true,
+  isLoading: false,
   editBlogId: "",
   isEditing: false,
 };
@@ -76,17 +111,25 @@ export const blogSlice = createSlice({
       state.isLoading = false;
       state.blog = action.payload;
     },
+    [createBlog.pending]: (state) => {
+      state.isLoading = true;
+    },
     [createBlog.fulfilled]: (state, action) => {
       // console.log(action);
       // console.log(action.payload);
       // console.log("FullFilled Post Blog", action.payload);
       state.isLoading = false;
       state.blogs = action.payload;
+      toast.success("Your Blog Published SuccessFully!");
       // return {
       //   ...state,
       //   blogs: [action.payload, ...state.blogs],
       //   isLoading: (state.isLoading = false),
       // };
+    },
+    [createBlog.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
     },
     [updateBlog.pending]: (state) => {
       state.isLoading = true;

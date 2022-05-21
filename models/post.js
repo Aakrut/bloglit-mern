@@ -2,8 +2,9 @@ import mongoose from "mongoose";
 
 const BlogSchema = new mongoose.Schema({
     createdBy: {
-        type: String,
-        required: [true,'Please Provide Username.'],
+        type: mongoose.Types.ObjectId,
+        ref:'User',
+        required: [true,'Please Provide User.'],
     },
     createdAt: {
         type: Date,

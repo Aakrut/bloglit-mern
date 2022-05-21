@@ -4,10 +4,10 @@ import { useDispatch, useSelector } from "react-redux";
 import FormRow from "../../components/FormRow";
 import { logoutUser, updateUser } from "../../features/user/userSlice";
 import FileBase64 from "react-file-base64";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
 const UserProfile = () => {
-  const { user } = useSelector((state) => state.user);
+  const { user, isLoading } = useSelector((state) => state.user);
 
   const [userData, setDataUser] = useState({
     username: user?.username || "",
@@ -28,7 +28,7 @@ const UserProfile = () => {
     const { username, fullName, email, bio, avatar } = userData;
 
     if (!username || !email || !fullName || !bio || !avatar) {
-      toast.error('PLease Provide All Fields.');
+      toast.error("PLease Provide All Fields.");
       return;
     }
     dispatch(updateUser({ username, avatar, bio, fullName }));
@@ -80,11 +80,15 @@ const UserProfile = () => {
               }
             />
 
-            <button type="submit" className="btn-update">
-              Update Profile
+            <button type="submit" disabled={isLoading} className="btn-update">
+              {isLoading ? `Please Wait` : `Update Profile`}
             </button>
 
-            <button className="btn-logout" onClick={() => dispatch(logoutUser)}>
+            <button
+              className="btn-logout"
+              disabled={isLoading}
+              onClick={() => dispatch(logoutUser())}
+            >
               Log Out
             </button>
           </form>
