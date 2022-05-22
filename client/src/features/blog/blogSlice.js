@@ -7,14 +7,6 @@ import {
   getTokenFromLocalStorage,
 } from "../../utils/localStorage";
 
-// const url = "http://localhost:5000/api/v1";
-
-// export const getBlogs = createAsyncThunk("blog/getBlogs", async (_,thunkAPI) => {
-//   return await fetch(`/api/v1/blog/`)
-//     .then((resp) => resp.json())
-//     .catch((err) => console.log(err));
-// });
-
 export const getBlogs = createAsyncThunk(
   "blog/getBlogs",
   async (_, thunkAPI) => {
@@ -32,12 +24,6 @@ export const getBlogs = createAsyncThunk(
   }
 );
 
-// export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
-//   return await fetch(`/api/v1/blog/${id}`)
-//     .then((resp) => resp.json())
-//     .catch((err) => console.log(err));
-// });
-
 export const getBlog = createAsyncThunk(
   "blog/getBlog",
   async (id, thunkAPI) => {
@@ -54,13 +40,6 @@ export const getBlog = createAsyncThunk(
     }
   }
 );
-
-// export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
-//   return await axios
-//     .post(`${url}/blog/`, data)
-//     .then((resp) => console.log(resp.data))
-//     .catch((err) => console.log(err));
-// });
 
 export const createBlog = createAsyncThunk(
   `blog/createBlog`,
@@ -85,11 +64,24 @@ export const createBlog = createAsyncThunk(
 
 export const updateBlog = createAsyncThunk(
   `blog/updateBlog`,
-  async ({ blogID, blog }, thunkAPI) => {
-    return await axios
-      .patch(`/api/v1/blog/${blogID}`, blog)
-      .then((resp) => console.log(`Updated SuccessFully ${resp}`))
-      .catch((err) => console.log(err));
+  async ({ blogId, blog }, thunkAPI) => {
+    try {
+      console.log(blogId, blog);
+      const resp = await axios.patch(`/api/v1/blog/${blogId}`, blog, {
+        headers: {
+          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      });
+      console.log(resp.data);
+      return resp.data;
+    } catch (error) {
+      if (error.response.status === 401) {
+        removeUserFromLocalStorage();
+        removeTokenFromLocalStorage();
+        return thunkAPI.rejectWithValue("Unauthorized! Logging Out");
+      }
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
   }
 );
 
@@ -166,9 +158,11 @@ export const blogSlice = createSlice({
       // };
 
       state.isLoading = false;
+      toast.success("Your Blog Updated SuccessFully!");
     },
-    [updateBlog.rejected]: (state) => {
-      state.isLoading = true;
+    [updateBlog.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
     },
     [deleteBlog.pending]: (state) => {
       state.isLoading = true;
@@ -188,3 +182,34 @@ export const blogSlice = createSlice({
 export const { setEditBlog } = blogSlice.actions;
 
 export default blogSlice.reducer;
+
+// const url = "http://localhost:5000/api/v1";
+
+// export const getBlogs = createAsyncThunk("blog/getBlogs", async (_,thunkAPI) => {
+//   return await fetch(`/api/v1/blog/`)
+//     .then((resp) => resp.json())
+//     .catch((err) => console.log(err));
+// });
+
+// export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
+//   return await fetch(`/api/v1/blog/${id}`)
+//     .then((resp) => resp.json())
+//     .catch((err) => console.log(err));
+// });
+
+// export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
+//   return await axios
+//     .post(`${url}/blog/`, data)
+//     .then((resp) => console.log(resp.data))
+//     .catch((err) => console.log(err));
+// });
+
+// export const updateBlog = createAsyncThunk(
+//   `blog/updateBlog`,
+//   async ({ blogID, blog }, thunkAPI) => {
+//     return await axios
+//       .patch(`/api/v1/blog/${blogID}`, blog)
+//       .then((resp) => console.log(`Updated SuccessFully ${resp}`))
+//       .catch((err) => console.log(err));
+//   }
+// );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import FormRow from "../../components/FormRow";
 import FormRow2 from "../../components/FormRow2";
@@ -6,7 +6,7 @@ import styled from "styled-components";
 import FileBase64 from "react-file-base64";
 import { toast } from "react-toastify";
 import { BsImage } from "react-icons/bs";
-import { createBlog } from "../../features/blog/blogSlice";
+import { createBlog, updateBlog } from "../../features/blog/blogSlice";
 
 const Create = () => {
   const { isLoading, isEditing } = useSelector((state) => state.blog);
@@ -17,13 +17,25 @@ const Create = () => {
     image: "",
   });
 
+  const blog = useSelector((store) => store.blog);
+
+  console.log(blog.blog.title);
+
+  const blogId = useSelector((state) => state.blog.editBlogId);
+
+  console.log(blogId);
+
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (blogId) setValues(blog.blog);
+  }, [blogId, blog]);
 
   const handleChange = (e) => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  
+  console.log(values);
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -34,10 +46,17 @@ const Create = () => {
       return;
     }
 
-    dispatch(createBlog(values));
-    
+      console.log(values);
 
-    console.log(values);
+    if (blogId) {
+      dispatch(updateBlog({ blogId: blogId, blog: values }));
+      return;
+    } else {
+      dispatch(createBlog(values));
+      return
+    }
+
+   
   };
 
   return (
@@ -45,8 +64,8 @@ const Create = () => {
       <h3 className="edit">{isEditing ? "Edit Blog" : "Publish Blog"}</h3>
       <ContentWrapper>
         <ImageWrapper>
-          {values.image.length > 0 ? (
-            <img src={values.image} alt="blog" />
+          {values?.image?.length > 0 ? (
+            <img src={values?.image} alt="blog" />
           ) : (
             <div className="no-image">
               <BsImage className="icon" /> Please Select an Image to see
@@ -98,12 +117,12 @@ export default Create;
 const Wrapper = styled.div`
   height: 80vh;
 
-  .edit{
-    text-align:center ;
-    font-family:'Poppins',sans-serif ;
-    font-weight:600 ;
-  font-size:20px ;
-  margin:20px 0 ;
+  .edit {
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-weight: 600;
+    font-size: 20px;
+    margin: 20px 0;
   }
 `;
 const ContentWrapper = styled.div`

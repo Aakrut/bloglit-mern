@@ -1,5 +1,8 @@
 import { StatusCodes } from "http-status-codes";
+import BadRequestError from "../errors/bad-request.js";
+import NotFoundError from "../errors/not-found.js";
 import Blog from "../models/post.js";
+import checkPermissions from "../utils/checkPermissions.js";
 
 // Get All Blog Posts
 const getAllPosts = async (req, res) => {
@@ -43,11 +46,26 @@ const getPost = async (req, res) => {
 const updatePost = async (req, res) => {
   const { id } = req.params;
 
+  const { title, desc, image } = req.body;
+
+  if (!title || !desc || !image) {
+    throw new BadRequestError("Please Provide All Values");
+  }
+
   try {
-    const blog = await Blog.findOneAndUpdate({ _id: id }, req.body, {
+    const blog = await Blog.findOne({ _id: id });
+
+    if (!blog) {
+      throw new NotFoundError(`No blog with id:${id}`);
+    }
+
+    checkPermissions(req.user, blog.createdBy);
+
+    const updateBlog = await Blog.findOneAndUpdate({ _id: id }, req.body, {
       new: true,
+      runValidators: true,
     });
-    res.status(StatusCodes.CREATED).json(blog);
+    res.status(StatusCodes.CREATED).json(updateBlog);
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
   }
@@ -57,8 +75,16 @@ const updatePost = async (req, res) => {
 const deletePost = async (req, res) => {
   const { id } = req.params;
   try {
-    const blog = await Blog.findByIdAndDelete({ _id: id });
-    res.status(StatusCodes.OK).json(blog);
+    const blog = await Blog.findOne({ _id: id });
+
+    if (!blog) {
+      throw new NotFoundError(`No blog with id:${id}`);
+    }
+
+    checkPermissions(req.user, blog.createdBy);
+
+    const deleteBlog = await Blog.findOneAndDelete({ _id: id });
+    res.status(StatusCodes.OK).json(deleteBlog);
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
   }

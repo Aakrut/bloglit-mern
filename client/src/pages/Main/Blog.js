@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getBlog } from "../../features/blog/blogSlice";
+import { getBlog, setEditBlog } from "../../features/blog/blogSlice";
 import styled from "styled-components";
-import Image1 from "../../assets/images/blog.jpg";
 import ImageProfile from "../../assets/images/landing1.png";
 import { BiLike } from "react-icons/bi";
 import moment from "moment";
@@ -56,7 +55,11 @@ const Blog = () => {
             <Button
               to="/create"
               className="button-edit"
-              onClick={() => console.log(`Edit Blog!`)}
+              onClick={() => {
+                dispatch(setEditBlog({
+                  editBlogId: blog._id,
+                }))
+              }}
             >
               Edit Blog
             </Button>
