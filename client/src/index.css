@@ -17,6 +17,7 @@ time, mark, audio, video {
 	font-size: 100%;
 	font: inherit;
 	vertical-align: baseline;
+	scroll-behavior: smooth;
 }
 
 article,aside,details,figcaption,figure,
@@ -31,4 +32,28 @@ footer,header,hgroup,menu,nav,section {
 
 .Toastify__toast {
   text-transform: capitalize;
+}
+
+::-webkit-scrollbar-track
+{
+  -webkit-box-shadow:  0 0 6px rgba(0,0,0,0.3);
+  background-color: #FFF;
+}
+
+::-webkit-scrollbar
+{
+  width: 5px;
+  background-color: #FFF;
+}
+
+::-webkit-scrollbar-thumb
+{
+  background-color: #FFF;
+  border-radius: 5px;
+  background-image: -webkit-linear-gradient(90deg,
+                                            rgba(0, 0, 0, 1) 0%,
+                        rgba(0, 0, 0, 1) 25%,
+                        transparent 100%,
+                        rgba(0, 0, 0, 1) 75%,
+                        transparent)
 }

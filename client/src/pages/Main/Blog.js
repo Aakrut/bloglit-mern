@@ -131,10 +131,19 @@ const UserWrapper = styled.div`
   justify-content: space-between;
   margin: 10px 0;
 
+  @media only screen and (max-width: 768px) {
+    margin: 10px 10px;
+  }
+
   .profile {
     width: 102px;
     height: 102px;
     border-radius: 50%;
+
+    @media only screen and (max-width: 768px) {
+      width: 61px;
+      height: 61px;
+    }
   }
 
   .user-profile {
@@ -153,6 +162,10 @@ const UserWrapper = styled.div`
     font-weight: 600;
     font-size: 25px;
     line-height: 30px;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 18px;
+    }
   }
 
   .username {
@@ -162,6 +175,10 @@ const UserWrapper = styled.div`
     font-size: 20px;
     line-height: 24px;
     color: #9a9a9a;
+
+    @media only screen and (max-width: 768px) {
+      font-size: 18px;
+    }
   }
 `;
 
@@ -171,12 +188,23 @@ const ImageWrapper = styled.div`
   width: 1234px;
   height: 450px;
   margin: 20px 0;
+
+  @media only screen and (max-width: 768px) {
+    width: auto;
+    margin: 0 10px;
+    height: 225px;
+  }
 `;
 
 const ImageContainer = styled.div`
   position: relative;
   width: 1234px;
   height: 450px;
+
+  @media only screen and (max-width: 768px) {
+    width: auto;
+    height: 225px;
+  }
 
   img {
     position: absolute;
@@ -195,10 +223,18 @@ const ImageContainer = styled.div`
     left: 120px;
     filter: blur(60px) saturate(2);
     z-index: -1;
+
+    @media only screen and (max-width: 768px) {
+      top: 60px;
+      left: 38px;
+    }
   }
 `;
 
 const DetailWrapper = styled.div`
+  @media only screen and (max-width: 768px) {
+    margin: 0 10px;
+  }
   .detail_1 {
     display: flex;
     align-items: center;
@@ -238,6 +274,11 @@ const DetailWrapper = styled.div`
     font-weight: 300;
     font-size: 24px;
     line-height: 125.52%;
+
+    @media only screen and (max-width: 768px) {
+      font-weight: 200;
+      font-size: 18px;
+    }
   }
 `;
 
@@ -259,6 +300,11 @@ const Button = styled(Link)`
     background: #399ffd;
     color: white;
     box-shadow: 0px 10px 20px rgba(57, 159, 253, 0.5);
+  }
+
+  @media only screen and (max-width: 768px) {
+    width: 60px;
+    font-size: 12px;
   }
 `;
 
@@ -286,6 +332,11 @@ const BtnWrapper = styled.div`
       background: #fd3939;
       color: white;
       box-shadow: 0px 10px 20px rgba(253, 57, 57, 0.5);
+    }
+
+    @media only screen and (max-width: 768px) {
+      width: 60px;
+      font-size: 12px;
     }
   }
 `;

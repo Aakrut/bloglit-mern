@@ -37,16 +37,31 @@ const Wrapper = styled.div`
   flex-direction: column;
   border-radius: 5px;
   cursor: pointer;
+
+  @media only screen and (max-width: 640px) {
+    flex-direction: row;
+    width:auto;
+    justify-content: flex-start;
+    padding-left:10px;
+    margin:0 10px ;
+  }
 `;
 
 const ImageWrapper = styled.div`
   width: 262px;
   height: 235px;
+  @media only screen and (max-width: 640px) {
+    width: 181px;
+  }
 `;
 
 const ImageContent = styled.div`
   position: relative;
   width: 260px;
+
+  @media only screen and (max-width: 640px) {
+    width: 240px;
+  }
 
   img {
     position: absolute;
@@ -56,6 +71,11 @@ const ImageContent = styled.div`
     top: 0;
     border-radius: 5px;
     z-index: 1;
+
+    @media only screen and (max-width: 640px) {
+      width: 180px;
+      
+    }
   }
 
   .blog-blur {
@@ -67,6 +87,17 @@ const ImageContent = styled.div`
     bottom: 42.28%;
     filter: blur(120px);
     z-index: 0;
+
+    @media only screen and (max-width: 640px) {
+      width: 109px;
+      height: 92px;
+      left: 34px;
+      right: 10.72%;
+      top: 180px;
+      bottom: 42.28%;
+      filter: blur(120px);
+      z-index: 0;
+    }
   }
 `;
 
@@ -78,6 +109,12 @@ const DetailWrapper = styled.div`
   text-align: center;
 
   margin: 15px 15px;
+
+  @media only screen and (max-width: 640px) {
+    align-items:flex-start ;
+    text-align: left !important;
+  
+  }
 
   .title {
     font-family: "Inter", sans-serif;

@@ -5,6 +5,7 @@ import FormRow from "../../components/FormRow";
 import { logoutUser, updateUser } from "../../features/user/userSlice";
 import FileBase64 from "react-file-base64";
 import { toast } from "react-toastify";
+import { SpinnerCircularSplit } from "spinners-react";
 
 const UserProfile = () => {
   const { user, isLoading } = useSelector((state) => state.user);
@@ -34,6 +35,21 @@ const UserProfile = () => {
     dispatch(updateUser({ username, avatar, bio, fullName }));
     console.log(userData);
   };
+
+
+   if (isLoading) {
+     return (
+       <Loader>
+         <SpinnerCircularSplit
+           size={50}
+           thickness={100}
+           speed={100}
+           color="rgba(57, 159, 253, 1)"
+           secondaryColor="rgba(57, 159, 253, 0.5)"
+         />
+       </Loader>
+     );
+   }
 
   return (
     <Wrapper>
@@ -100,6 +116,14 @@ const UserProfile = () => {
 
 export default UserProfile;
 
+const Loader = styled.div`
+  height: 800px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Wrapper = styled.div`
   height: 80vh;
 `;
@@ -112,6 +136,11 @@ const ContentWrapper = styled.div`
   justify-content: center;
   align-items: center;
   margin: 0 auto;
+
+  @media only screen and (max-width: 640px) {
+    grid-template-columns: 1fr;
+    grid-gap: 40px;
+  }
 `;
 
 const ImageWrapper = styled.div`
@@ -120,8 +149,9 @@ const ImageWrapper = styled.div`
   justify-content: center;
 
   img {
-    width: 150px;
-    height: 150px;
+    width: 300px;
+    height: 300px;
+    border-radius: 5px;
   }
 `;
 

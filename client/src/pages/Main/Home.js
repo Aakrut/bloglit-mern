@@ -58,4 +58,8 @@ const ContentWrapper = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 10px;
+
+  @media only screen and (max-width: 640px) {
+    grid-template-columns:repeat(1,1fr);
+  }
 `;

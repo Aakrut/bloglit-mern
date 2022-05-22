@@ -7,6 +7,7 @@ import FileBase64 from "react-file-base64";
 import { toast } from "react-toastify";
 import { BsImage } from "react-icons/bs";
 import { createBlog, updateBlog } from "../../features/blog/blogSlice";
+import { SpinnerCircularSplit } from "spinners-react";
 
 const Create = () => {
   const { isLoading, isEditing } = useSelector((state) => state.blog);
@@ -58,6 +59,20 @@ const Create = () => {
 
    
   };
+
+   if (isLoading) {
+     return (
+       <Loader>
+         <SpinnerCircularSplit
+           size={50}
+           thickness={100}
+           speed={100}
+           color="rgba(57, 159, 253, 1)"
+           secondaryColor="rgba(57, 159, 253, 0.5)"
+         />
+       </Loader>
+     );
+   }
 
   return (
     <Wrapper>
@@ -113,6 +128,14 @@ const Create = () => {
 };
 
 export default Create;
+
+const Loader = styled.div`
+  height: 800px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
 
 const Wrapper = styled.div`
   height: 80vh;
