@@ -36,20 +36,19 @@ const UserProfile = () => {
     console.log(userData);
   };
 
-
-   if (isLoading) {
-     return (
-       <Loader>
-         <SpinnerCircularSplit
-           size={50}
-           thickness={100}
-           speed={100}
-           color="rgba(57, 159, 253, 1)"
-           secondaryColor="rgba(57, 159, 253, 0.5)"
-         />
-       </Loader>
-     );
-   }
+  if (isLoading) {
+    return (
+      <Loader>
+        <SpinnerCircularSplit
+          size={50}
+          thickness={100}
+          speed={100}
+          color="rgba(57, 159, 253, 1)"
+          secondaryColor="rgba(57, 159, 253, 0.5)"
+        />
+      </Loader>
+    );
+  }
 
   return (
     <Wrapper>

@@ -1,6 +1,7 @@
 import { StatusCodes } from "http-status-codes";
 import BadRequestError from "../errors/bad-request.js";
 import NotFoundError from "../errors/not-found.js";
+import UnAuthenticatedError from "../errors/unauthenticated.js";
 import Blog from "../models/post.js";
 import checkPermissions from "../utils/checkPermissions.js";
 
@@ -94,14 +95,24 @@ const deletePost = async (req, res) => {
 const likePost = async (req, res) => {
   const { id } = req.params;
   try {
+    if (!req.user) {
+      throw new UnAuthenticatedError("UnAuthenticated User!");
+    }
     const postId = await Blog.findById({ _id: id });
-    const blog = await Blog.findByIdAndUpdate(
-      { _id: id },
-      { likes: postId.likes + 1 },
-      {
-        new: true,
-      }
+
+    const index = postId.likes.findIndex(
+      (id) => id === String(req.user.userId)
     );
+
+    if (index === -1) {
+      postId.likes.push(req.user.userId);
+    } else {
+      postId.likes = post.likes.filter((id) => id !== String(req.user.userId));
+    }
+
+    const blog = await Blog.findByIdAndUpdate({ _id: id }, postId, {
+      new: true,
+    });
     res.status(StatusCodes.CREATED).json({ blog });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
