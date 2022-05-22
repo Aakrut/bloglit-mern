@@ -33,7 +33,6 @@ export const getBlog = createAsyncThunk(
           authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       });
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);
@@ -66,13 +65,11 @@ export const updateBlog = createAsyncThunk(
   `blog/updateBlog`,
   async ({ blogId, blog }, thunkAPI) => {
     try {
-      console.log(blogId, blog);
       const resp = await axios.patch(`/api/v1/blog/${blogId}`, blog, {
         headers: {
           authorization: `Bearer ${getTokenFromLocalStorage()}`,
         },
       });
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
       if (error.response.status === 401) {
@@ -88,10 +85,16 @@ export const updateBlog = createAsyncThunk(
 export const deleteBlog = createAsyncThunk(
   `blog/deleteBlog`,
   async (id, thunkAPI) => {
-    return await axios
-      .delete(`/api/v1/blog/${id}`)
-      .then(() => console.log("Blog Deleted"))
-      .catch((err) => console.log(err));
+    try {
+      const resp = await axios.delete(`/api/v1/blog/${id}`, {
+        headers: {
+          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+        },
+      });
+      return resp.data.msg;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
   }
 );
 
@@ -139,7 +142,7 @@ export const blogSlice = createSlice({
     },
     [createBlog.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.blogs = [action.payload, ...state.blogs];
+      state.blogs = [...state.blogs, action.payload];
       toast.success("Your Blog Published SuccessFully!");
     },
     [createBlog.rejected]: (state, { payload }) => {
@@ -150,13 +153,6 @@ export const blogSlice = createSlice({
       state.isLoading = true;
     },
     [updateBlog.fulfilled]: (state, action) => {
-      // const editBlog = state.blogs.map((b) => b._id === action.payload._id ? action.payload : b)
-
-      // return {
-      //   ...state,
-      //   blogs: editBlog,
-      // };
-
       state.isLoading = false;
       toast.success("Your Blog Updated SuccessFully!");
     },
@@ -166,15 +162,14 @@ export const blogSlice = createSlice({
     },
     [deleteBlog.pending]: (state) => {
       state.isLoading = true;
-      console.log("Pending");
     },
     [deleteBlog.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.blogs = action.payload;
+      toast.success("Your Blog Deleted SuccessFully!");
     },
-    [deleteBlog.rejected]: (state, action) => {
+    [deleteBlog.rejected]: (state, { payload }) => {
       state.isLoading = false;
-      state.blogs = action.payload;
+      toast.error(payload);
     },
   },
 });
@@ -210,6 +205,16 @@ export default blogSlice.reducer;
 //     return await axios
 //       .patch(`/api/v1/blog/${blogID}`, blog)
 //       .then((resp) => console.log(`Updated SuccessFully ${resp}`))
+//       .catch((err) => console.log(err));
+//   }
+// );
+
+// export const deleteBlog = createAsyncThunk(
+//   `blog/deleteBlog`,
+//   async (id, thunkAPI) => {
+//     return await axios
+//       .delete(`/api/v1/blog/${id}`)
+//       .then(() => console.log("Blog Deleted"))
 //       .catch((err) => console.log(err));
 //   }
 // );

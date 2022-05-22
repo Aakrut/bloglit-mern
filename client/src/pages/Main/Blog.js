@@ -1,7 +1,11 @@
 import React, { useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { getBlog, setEditBlog } from "../../features/blog/blogSlice";
+import {
+  deleteBlog,
+  getBlog,
+  setEditBlog,
+} from "../../features/blog/blogSlice";
 import styled from "styled-components";
 import ImageProfile from "../../assets/images/landing1.png";
 import { BiLike } from "react-icons/bi";
@@ -13,9 +17,7 @@ const Blog = () => {
   const { user } = useSelector((state) => state.user);
   const { id } = useParams();
   const dispatch = useDispatch();
-
-  console.log(blog);
-  console.log(user);
+  const navigate = useNavigate();
 
   useEffect(() => {
     dispatch(getBlog(id));
@@ -52,17 +54,31 @@ const Blog = () => {
             </div>
           </div>
           {blog?.createdBy?._id === user._id ? (
-            <Button
-              to="/create"
-              className="button-edit"
-              onClick={() => {
-                dispatch(setEditBlog({
-                  editBlogId: blog._id,
-                }))
-              }}
-            >
-              Edit Blog
-            </Button>
+            <BtnWrapper>
+              <Button
+                to="/create"
+                className="button-edit"
+                onClick={() => {
+                  dispatch(
+                    setEditBlog({
+                      editBlogId: blog._id,
+                    })
+                  );
+                }}
+              >
+                Edit Blog
+              </Button>
+
+              <button
+                className="btn-delete"
+                onClick={() => {
+                  dispatch(deleteBlog(blog._id));
+                  navigate("/");
+                }}
+              >
+                Delete
+              </button>
+            </BtnWrapper>
           ) : null}
         </UserWrapper>
 
@@ -227,7 +243,7 @@ const DetailWrapper = styled.div`
 
 const Button = styled(Link)`
   width: 102px;
-  height: 60px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -243,5 +259,33 @@ const Button = styled(Link)`
     background: #399ffd;
     color: white;
     box-shadow: 0px 10px 20px rgba(57, 159, 253, 0.5);
+  }
+`;
+
+const BtnWrapper = styled.div`
+  display: flex;
+  align-items: center;
+
+  .btn-delete {
+    width: 102px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    transition: all 0.3s ease-in-out;
+    font-family: "Poppins", sans-serif;
+    color: white;
+    border: 3px solid #fd3939;
+    color: #fd3939;
+    cursor: pointer;
+    background: transparent;
+    margin-left: 10px;
+
+    &:hover {
+      background: #fd3939;
+      color: white;
+      box-shadow: 0px 10px 20px rgba(253, 57, 57, 0.5);
+    }
   }
 `;
