@@ -107,7 +107,9 @@ const likePost = async (req, res) => {
     if (index === -1) {
       postId.likes.push(req.user.userId);
     } else {
-      postId.likes = post.likes.filter((id) => id !== String(req.user.userId));
+      postId.likes = postId.likes.filter(
+        (id) => id !== String(req.user.userId)
+      );
     }
 
     const blog = await Blog.findByIdAndUpdate({ _id: id }, postId, {
