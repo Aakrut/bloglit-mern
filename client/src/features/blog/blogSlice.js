@@ -9,9 +9,9 @@ import {
 
 export const getBlogs = createAsyncThunk(
   "blog/getBlogs",
-  async (_, thunkAPI) => {
+  async (page, thunkAPI) => {
     try {
-      const resp = await axios.get(`/api/v1/blog/`, {
+      const resp = await axios.get(`/api/v1/blog?page=${page}`, {
         headers: {
           authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
@@ -104,6 +104,8 @@ const initialState = {
   isLoading: false,
   editBlogId: "",
   isEditing: false,
+  currentPage: 1,
+  numberOfPages:null,
 };
 
 export const blogSlice = createSlice({
@@ -120,7 +122,9 @@ export const blogSlice = createSlice({
     },
     [getBlogs.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.blogs = [...action.payload];
+      state.blogs = [...action.payload.blog];
+      state.numberOfPages = action.payload.numberOfPages;
+      state.currentPage = action.payload.currentPage;
     },
     [getBlogs.rejected]: (state, { payload }) => {
       state.isLoading = false;

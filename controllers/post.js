@@ -7,9 +7,24 @@ import checkPermissions from "../utils/checkPermissions.js";
 
 // Get All Blog Posts
 const getAllPosts = async (req, res) => {
+ 
+
   try {
-    const blog = await Blog.find({});
-    res.status(StatusCodes.OK).json(blog);
+    // const blog = await Blog.find({});
+    // res.status(StatusCodes.OK).json(blog);
+
+    const page = Number(req.query.page) || 1;
+    const limit = 8;
+    const startIndex = (Number(page) - 1) * limit;
+    const total = await Blog.countDocuments({});
+    const blog = await Blog.find({}).limit(limit).skip(startIndex);
+
+    res.status(StatusCodes.OK).json({
+      blog,
+      currentPages: Number(page) || 1,
+      totalBlogs: total,
+      numOfPages: Math.ceil(total / limit),
+    });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
   }
@@ -122,11 +137,43 @@ const likePost = async (req, res) => {
 };
 
 const searchBlog = async (req, res) => {
-  try {
-    res.send('Search Blog!!!');
-  } catch (error) {
-    res.send(error);
-  }
-}
+  const { page } = req.query;
 
-export { getAllPosts, createPost, getPost, updatePost, deletePost, likePost ,searchBlog};
+  try {
+    // const blog = await Blog.find({});
+    // res.status(StatusCodes.OK).json(blog);
+
+    const limit = 8;
+    const startIndex = (Number(page) - 1) * limit;
+    const total = await Blog.countDocuments({});
+    const blog = await Blog.find().limit(limit).skip(startIndex);
+
+    // const page = Number(req.query.page) || 1;
+    // const limit = Number(req.query.limit) || 8;
+    // const skip = (Number(page) - 1) * limit;
+
+    // const total = await Blog.countDocuments({});
+    // const numOfPages = Math.ceil(total / limit);
+
+    // const blog = await Blog.find({}).limit(limit).skip(skip);
+
+    res.status(StatusCodes.OK).json({
+      blog,
+      currentPages: Number(page),
+      totalBlogs: total,
+      numOfPages: Math.ceil(total / limit),
+    });
+  } catch (error) {
+    res.status(StatusCodes.NOT_FOUND).send(error);
+  }
+};
+
+export {
+  getAllPosts,
+  createPost,
+  getPost,
+  updatePost,
+  deletePost,
+  likePost,
+  searchBlog,
+};

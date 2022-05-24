@@ -9,6 +9,8 @@ const Home = () => {
   const { blogs ,isLoading} = useSelector((state) => state.blog);
   const dispatch = useDispatch();
 
+  console.log(blogs);
+
   useEffect(() => {
     dispatch(getBlogs());
   }, [dispatch]);

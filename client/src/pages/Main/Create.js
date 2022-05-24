@@ -237,6 +237,7 @@ const DetailsWrapper = styled.div`
     overflow: auto;
     outline: none;
     transition: all 0.3s ease-in-out;
+    font-family: "Poppins", sans-serif;
   }
 
   textarea:focus {

@@ -5,7 +5,6 @@ import {
   deleteBlog,
   getBlog,
   setEditBlog,
-  likeBlog,
 } from "../../features/blog/blogSlice";
 import styled from "styled-components";
 import ImageProfile from "../../assets/images/landing1.png";
