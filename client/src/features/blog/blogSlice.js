@@ -98,6 +98,27 @@ export const deleteBlog = createAsyncThunk(
   }
 );
 
+export const searchBlog = createAsyncThunk(
+  `blog/searchBlog`,
+  async (search, thunkAPI) => {
+    console.log(search);
+    try {
+      const resp = await axios.get(
+        `/api/v1/blog/search/post?search=${search}`,
+        {
+          headers: {
+            authorization: `Bearer ${getUserFromLocalStorage().token}`,
+          },
+        }
+      );
+      console.log(resp.data);
+      return resp.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data.msg);
+    }
+  }
+);
+
 const initialState = {
   blogs: [],
   blog: {},
@@ -105,7 +126,7 @@ const initialState = {
   editBlogId: "",
   isEditing: false,
   currentPage: 1,
-  numberOfPages:null,
+  numberOfPages: null,
 };
 
 export const blogSlice = createSlice({
@@ -117,7 +138,7 @@ export const blogSlice = createSlice({
     },
     setCurrentPage: (state, action) => {
       state.currentPage = action.payload;
-    }
+    },
   },
   extraReducers: {
     [getBlogs.pending]: (state) => {
@@ -175,6 +196,17 @@ export const blogSlice = createSlice({
       toast.success("Your Blog Deleted SuccessFully!");
     },
     [deleteBlog.rejected]: (state, { payload }) => {
+      state.isLoading = false;
+      toast.error(payload);
+    },
+    [searchBlog.pending]: (state) => {
+      state.isLoading = true;
+    },
+    [searchBlog.fulfilled]: (state, action) => {
+      state.isLoading = false;
+      state.blogs = [...action.payload];
+    },
+    [searchBlog.rejected]: (state, { payload }) => {
       state.isLoading = false;
       toast.error(payload);
     },

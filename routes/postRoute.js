@@ -6,7 +6,7 @@ import {
   updatePost,
   getPost,
   likePost,
-  searchBlog,
+  searchPost,
 } from "../controllers/post.js";
 
 const router = express.Router();
@@ -14,6 +14,7 @@ const router = express.Router();
 router.route("/").get(getAllPosts).post(createPost);
 router.route("/:id").get(getPost).patch(updatePost).delete(deletePost);
 router.route("/:id/like").patch(likePost);
-router.get('/search').get(searchBlog);
+
+router.route("/search/post").get(searchPost);
 
 export default router;

@@ -46,7 +46,7 @@ const Pagination = ({
             className="btn"
             onClick={() => dispatch(setCurrentPage(currentPage - 1))}
           >
-            Prev
+            Previous
           </button>
           <p className="page">{currentPage}</p>
         </Wrapper3>

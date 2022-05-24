@@ -131,9 +131,16 @@ const likePost = async (req, res) => {
   }
 };
 
-const searchBlog = async (req, res) => {
+//Search Blog by Title
+const searchPost = async (req, res) => {
+  const { search } = req.query;
+
   try {
-  } catch (error) {}
+    const blog = await Blog.find({ title: { $regex: search, $options: "i" } });
+    res.status(StatusCodes.OK).json(blog);
+  } catch (error) {
+    res.status(404).json({ message: "Something Went Wrong!" });
+  }
 };
 
 export {
@@ -143,5 +150,5 @@ export {
   updatePost,
   deletePost,
   likePost,
-  searchBlog,
+  searchPost,
 };
