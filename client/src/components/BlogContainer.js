@@ -18,7 +18,7 @@ const BlogContainer = (blog) => {
           {blog.blog.desc.substring(0, 120)}
           ...
         </p>
-        <Button to={`/blog/${blog.blog._id}`}>Continue Reading</Button>
+        <Button to={`/blog/${blog.blog._id}`}> Continue Reading </Button>
       </DetailWrapper>
     </Wrapper>
   );
@@ -43,7 +43,7 @@ const Wrapper = styled.div`
     width:auto;
     justify-content: flex-start;
     padding-left:10px;
-    margin:0 10px ;
+    margin:0 5px ;
   }
 `;
 
@@ -157,5 +157,10 @@ const Button = styled(Link)`
     box-shadow: 0px 10px 20px rgba(57, 159, 253, 0.5);
     color: white;
     transform: translate(0, -5px);
+  }
+
+  @media only screen and (max-width: 768px) {
+    width:auto;
+    padding: 0 10px;
   }
 `;

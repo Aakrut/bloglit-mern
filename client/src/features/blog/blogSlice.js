@@ -115,6 +115,9 @@ export const blogSlice = createSlice({
     setEditBlog: (state, action) => {
       return { ...state, isEditing: true, ...action.payload };
     },
+    setCurrentPage: (state, action) => {
+      state.currentPage = action.payload;
+    }
   },
   extraReducers: {
     [getBlogs.pending]: (state) => {
@@ -178,6 +181,6 @@ export const blogSlice = createSlice({
   },
 });
 
-export const { setEditBlog, updateLike } = blogSlice.actions;
+export const { setEditBlog, setCurrentPage } = blogSlice.actions;
 
 export default blogSlice.reducer;
