@@ -103,6 +103,8 @@ const updateUser = async (req, res) => {
       { expiresIn: process.env.JWT_LIFETIME }
     );
 
+    user.password = undefined;
+
     res.status(StatusCodes.OK).json({ user, token });
   } catch (error) {
     res.send(error);

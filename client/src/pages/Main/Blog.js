@@ -5,16 +5,20 @@ import {
   deleteBlog,
   getBlog,
   setEditBlog,
+  likeBlog,
 } from "../../features/blog/blogSlice";
 import styled from "styled-components";
 import ImageProfile from "../../assets/images/landing1.png";
-import { BiLike } from "react-icons/bi";
 import moment from "moment";
 import { SpinnerCircularSplit } from "spinners-react";
+import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 
 const Blog = () => {
-  const { blog, isLoading } = useSelector((state) => state.blog);
+  const { blog, isLoading, editBlogId } = useSelector((state) => state.blog);
   const { user } = useSelector((state) => state.user);
+
+  const blogId = blog?._id;
+
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -22,6 +26,38 @@ const Blog = () => {
   useEffect(() => {
     dispatch(getBlog(id));
   }, [dispatch, id]);
+
+  const handleLike = () => {
+    console.log("Soon I Will Add Like Blog Feature!");
+  };
+
+  const Likes = () => {
+    if (blog?.likes?.length > 0) {
+      return blog?.likes?.find((like) => like === user.user._id) ? (
+        <>
+          <AiFillLike className="like-icon" />
+          &nbsp;
+          {blog?.likes?.length > 2
+            ? `You and ${blog?.likes?.length - 1} others`
+            : `${blog?.likes?.length} like${
+                blog?.likes?.length > 1 ? "s" : ""
+              }`}
+        </>
+      ) : (
+        <>
+          <AiOutlineLike className="like-icon" />
+          &nbsp;{blog?.likes?.length}{" "}
+          {blog?.likes?.length === 1 ? "Like" : "Likes"}
+        </>
+      );
+    }
+    return (
+      <>
+        <AiOutlineLike className="like-icon" />
+        &nbsp;Like
+      </>
+    );
+  };
 
   if (isLoading) {
     return (
@@ -53,7 +89,7 @@ const Blog = () => {
               <p className="username">@{blog?.createdBy?.username}</p>
             </div>
           </div>
-          {blog?.createdBy?._id === user._id ? (
+          {blog?.createdBy?._id === user.user._id ? (
             <BtnWrapper>
               <Button
                 to="/create"
@@ -92,7 +128,9 @@ const Blog = () => {
 
           <DetailWrapper>
             <div className="detail_1">
-              <BiLike className="like-icon" />
+              <div className="like" onClick={!user?.user ? null : handleLike}>
+                <Likes />
+              </div>
 
               <h4 className="time">{moment(blog.createdAt).fromNow()}</h4>
             </div>
@@ -240,6 +278,18 @@ const DetailWrapper = styled.div`
     align-items: center;
     justify-content: space-between;
     margin: 20px 0;
+  }
+
+  .like {
+    width: auto;
+    height: auto;
+    border: 2px solid #ff5454;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 10px;
   }
 
   .like-icon {

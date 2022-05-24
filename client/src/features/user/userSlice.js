@@ -41,7 +41,7 @@ export const updateUser = createAsyncThunk(
     try {
       const resp = await axios.patch("/api/v1/auth/user", user, {
         headers: {
-          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
       });
 
@@ -80,12 +80,13 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [registerUser.fulfilled]: (state, { payload }) => {
-      const { user, token } = payload;
+      // const { user, token } = payload;
+      const user = payload;
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
-      addTokenToLocalStorage(token);
-      toast.success(`Hello There ${user.username}`);
+      // addTokenToLocalStorage(token);
+      toast.success(`Hello There ${user.user.username}`);
     },
     [registerUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -95,12 +96,13 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [loginUser.fulfilled]: (state, { payload }) => {
-      const { user, token } = payload;
+      // const { user, token } = payload;
+      const user = payload;
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
-      addTokenToLocalStorage(token);
-      toast.success(`Welcome Back! ${user.username}`);
+      // addTokenToLocalStorage(token);
+      toast.success(`Welcome Back! ${user.user.username}`);
     },
     [loginUser.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -110,12 +112,13 @@ const userSlice = createSlice({
       state.isLoading = true;
     },
     [updateUser.fulfilled]: (state, { payload }) => {
-      const { user, token } = payload;
+      // const { user, token } = payload;
+      const user = payload;
       state.isLoading = false;
       state.user = user;
       addUserToLocalStorage(user);
-      addTokenToLocalStorage(token);
-      toast.success(`Your Profile Updated! ${user.username}`);
+      // addTokenToLocalStorage(token);
+      toast.success(`Your Profile Updated! ${user.user.username}`);
     },
     [updateUser.rejected]: (state, { payload }) => {
       state.isLoading = false;

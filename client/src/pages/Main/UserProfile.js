@@ -8,7 +8,10 @@ import { toast } from "react-toastify";
 import { SpinnerCircularSplit } from "spinners-react";
 
 const UserProfile = () => {
-  const { user, isLoading } = useSelector((state) => state.user);
+  const {
+    user: { user },
+    isLoading,
+  } = useSelector((state) => state.user);
 
   const [userData, setDataUser] = useState({
     username: user?.username || "",
@@ -33,7 +36,6 @@ const UserProfile = () => {
       return;
     }
     dispatch(updateUser({ username, avatar, bio, fullName }));
-    console.log(userData);
   };
 
   if (isLoading) {

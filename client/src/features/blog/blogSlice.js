@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 import {
   removeTokenFromLocalStorage,
   removeUserFromLocalStorage,
-  getTokenFromLocalStorage,
+  getUserFromLocalStorage,
 } from "../../utils/localStorage";
 
 export const getBlogs = createAsyncThunk(
@@ -13,7 +13,7 @@ export const getBlogs = createAsyncThunk(
     try {
       const resp = await axios.get(`/api/v1/blog/`, {
         headers: {
-          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
       });
 
@@ -30,7 +30,7 @@ export const getBlog = createAsyncThunk(
     try {
       const resp = await axios.get(`/api/v1/blog/${id}`, {
         headers: {
-          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
       });
       return resp.data;
@@ -46,7 +46,7 @@ export const createBlog = createAsyncThunk(
     try {
       const resp = await axios.post("/api/v1/blog", blog, {
         headers: {
-          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
       });
       return resp.data;
@@ -67,7 +67,7 @@ export const updateBlog = createAsyncThunk(
     try {
       const resp = await axios.patch(`/api/v1/blog/${blogId}`, blog, {
         headers: {
-          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
       });
       return resp.data;
@@ -88,7 +88,7 @@ export const deleteBlog = createAsyncThunk(
     try {
       const resp = await axios.delete(`/api/v1/blog/${id}`, {
         headers: {
-          authorization: `Bearer ${getTokenFromLocalStorage()}`,
+          authorization: `Bearer ${getUserFromLocalStorage().token}`,
         },
       });
       return resp.data.msg;
@@ -120,7 +120,7 @@ export const blogSlice = createSlice({
     },
     [getBlogs.fulfilled]: (state, action) => {
       state.isLoading = false;
-      state.blogs = action.payload;
+      state.blogs = [...action.payload];
     },
     [getBlogs.rejected]: (state, { payload }) => {
       state.isLoading = false;
@@ -174,47 +174,6 @@ export const blogSlice = createSlice({
   },
 });
 
-export const { setEditBlog } = blogSlice.actions;
+export const { setEditBlog, updateLike } = blogSlice.actions;
 
 export default blogSlice.reducer;
-
-// const url = "http://localhost:5000/api/v1";
-
-// export const getBlogs = createAsyncThunk("blog/getBlogs", async (_,thunkAPI) => {
-//   return await fetch(`/api/v1/blog/`)
-//     .then((resp) => resp.json())
-//     .catch((err) => console.log(err));
-// });
-
-// export const getBlog = createAsyncThunk("blog/getBlog", async (id) => {
-//   return await fetch(`/api/v1/blog/${id}`)
-//     .then((resp) => resp.json())
-//     .catch((err) => console.log(err));
-// });
-
-// export const createBlog = createAsyncThunk(`blog/createBlog`, async (data) => {
-//   return await axios
-//     .post(`${url}/blog/`, data)
-//     .then((resp) => console.log(resp.data))
-//     .catch((err) => console.log(err));
-// });
-
-// export const updateBlog = createAsyncThunk(
-//   `blog/updateBlog`,
-//   async ({ blogID, blog }, thunkAPI) => {
-//     return await axios
-//       .patch(`/api/v1/blog/${blogID}`, blog)
-//       .then((resp) => console.log(`Updated SuccessFully ${resp}`))
-//       .catch((err) => console.log(err));
-//   }
-// );
-
-// export const deleteBlog = createAsyncThunk(
-//   `blog/deleteBlog`,
-//   async (id, thunkAPI) => {
-//     return await axios
-//       .delete(`/api/v1/blog/${id}`)
-//       .then(() => console.log("Blog Deleted"))
-//       .catch((err) => console.log(err));
-//   }
-// );

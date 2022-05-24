@@ -20,11 +20,7 @@ const Create = () => {
 
   const blog = useSelector((store) => store.blog);
 
-  console.log(blog.blog.title);
-
   const blogId = useSelector((state) => state.blog.editBlogId);
-
-  console.log(blogId);
 
   const dispatch = useDispatch();
 
@@ -36,8 +32,6 @@ const Create = () => {
     setValues({ ...values, [e.target.name]: e.target.value });
   };
 
-  console.log(values);
-
   const onSubmit = (e) => {
     e.preventDefault();
     const { title, desc, image } = values;
@@ -47,32 +41,28 @@ const Create = () => {
       return;
     }
 
-      console.log(values);
-
     if (blogId) {
       dispatch(updateBlog({ blogId: blogId, blog: values }));
       return;
     } else {
       dispatch(createBlog(values));
-      return
+      return;
     }
-
-   
   };
 
-   if (isLoading) {
-     return (
-       <Loader>
-         <SpinnerCircularSplit
-           size={50}
-           thickness={100}
-           speed={100}
-           color="rgba(57, 159, 253, 1)"
-           secondaryColor="rgba(57, 159, 253, 0.5)"
-         />
-       </Loader>
-     );
-   }
+  if (isLoading) {
+    return (
+      <Loader>
+        <SpinnerCircularSplit
+          size={50}
+          thickness={100}
+          speed={100}
+          color="rgba(57, 159, 253, 1)"
+          secondaryColor="rgba(57, 159, 253, 0.5)"
+        />
+      </Loader>
+    );
+  }
 
   return (
     <Wrapper>

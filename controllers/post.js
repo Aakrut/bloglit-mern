@@ -95,7 +95,7 @@ const deletePost = async (req, res) => {
 const likePost = async (req, res) => {
   const { id } = req.params;
   try {
-    if (!req.user) {
+    if (!req.user.userId) {
       throw new UnAuthenticatedError("UnAuthenticated User!");
     }
     const postId = await Blog.findById({ _id: id });
@@ -115,10 +115,18 @@ const likePost = async (req, res) => {
     const blog = await Blog.findByIdAndUpdate({ _id: id }, postId, {
       new: true,
     });
-    res.status(StatusCodes.CREATED).json({ blog });
+    res.status(StatusCodes.OK).json({ blog });
   } catch (error) {
     res.status(StatusCodes.NOT_FOUND).send(error);
   }
 };
 
-export { getAllPosts, createPost, getPost, updatePost, deletePost, likePost };
+const searchBlog = async (req, res) => {
+  try {
+    res.send('Search Blog!!!');
+  } catch (error) {
+    res.send(error);
+  }
+}
+
+export { getAllPosts, createPost, getPost, updatePost, deletePost, likePost ,searchBlog};
