@@ -152,7 +152,7 @@ const ImageWrapper = styled.div`
   img {
     width: 300px;
     height: 300px;
-    border-radius: 5px;
+    border-radius: 50%;
   }
 `;
 

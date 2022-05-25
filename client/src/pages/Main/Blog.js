@@ -13,7 +13,7 @@ import { SpinnerCircularSplit } from "spinners-react";
 import { AiOutlineLike, AiFillLike } from "react-icons/ai";
 
 const Blog = () => {
-  const { blog, isLoading, editBlogId } = useSelector((state) => state.blog);
+  const { blog, isLoading } = useSelector((state) => state.blog);
   const { user } = useSelector((state) => state.user);
 
   const { id } = useParams();
