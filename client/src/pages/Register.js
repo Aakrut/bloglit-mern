@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import FormRow from "../components/FormRow";
-import { toast } from 'react-toastify';
-import { useSelector, useDispatch } from 'react-redux';
+import { toast } from "react-toastify";
+import { useSelector, useDispatch } from "react-redux";
 import { loginUser, registerUser } from "../features/user/userSlice";
 import { useNavigate } from "react-router-dom";
+import { SpinnerCircularSplit } from "spinners-react";
 
 const initialState = {
   username: "",
@@ -33,10 +34,14 @@ const Register = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const { username, email, password, fullName,isMember } = values;
+    const { username, email, password, fullName, isMember } = values;
 
-    if (!email || !password || (!isMember && !username) || (!isMember && !fullName)) {
-      
+    if (
+      !email ||
+      !password ||
+      (!isMember && !username) ||
+      (!isMember && !fullName)
+    ) {
       toast.error("Please Provide All Fields.");
       return;
     }
@@ -44,16 +49,30 @@ const Register = () => {
       dispatch(loginUser({ email: email, password: password }));
       return;
     }
-    dispatch(registerUser({ username,fullName,email,password }));
+    dispatch(registerUser({ username, fullName, email, password }));
   };
 
   useEffect(() => {
     if (user) {
       setTimeout(() => {
-        navigate('/');
+        navigate("/");
       }, 3000);
     }
   }, [user, navigate]);
+
+  if (isLoading) {
+    return (
+      <Loader>
+        <SpinnerCircularSplit
+          size={50}
+          thickness={100}
+          speed={100}
+          color="rgba(57, 159, 253, 1)"
+          secondaryColor="rgba(57, 159, 253, 0.5)"
+        />
+      </Loader>
+    );
+  }
 
   return (
     <Wrapper>
@@ -121,9 +140,16 @@ const Register = () => {
 
 export default Register;
 
+const Loader = styled.div`
+  height: 800px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const Wrapper = styled.div`
   height: 100vh;
-  /* background: #FFFBF3; */
 `;
 
 const ContentWrapper = styled.div`

@@ -2,11 +2,9 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
 import axios from "axios";
 import {
-  addTokenToLocalStorage,
   addUserToLocalStorage,
   getUserFromLocalStorage,
   removeUserFromLocalStorage,
-  getTokenFromLocalStorage,
   removeTokenFromLocalStorage,
 } from "../../utils/localStorage";
 
@@ -37,7 +35,6 @@ export const loginUser = createAsyncThunk(
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (user, thunkAPI) => {
-    // console.log(thunkAPI.getState());
     try {
       const resp = await axios.patch("/api/v1/auth/user", user, {
         headers: {
@@ -47,7 +44,6 @@ export const updateUser = createAsyncThunk(
 
       return resp.data;
     } catch (error) {
-      console.log(error.response);
       return thunkAPI.rejectWithValue(error.response.data.msg);
     }
   }

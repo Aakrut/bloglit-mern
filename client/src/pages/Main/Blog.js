@@ -16,8 +16,6 @@ const Blog = () => {
   const { blog, isLoading, editBlogId } = useSelector((state) => state.blog);
   const { user } = useSelector((state) => state.user);
 
-  const blogId = blog?._id;
-
   const { id } = useParams();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -27,7 +25,7 @@ const Blog = () => {
   }, [dispatch, id]);
 
   const handleLike = () => {
-    console.log("Soon I Will Add Like Blog Feature!");
+    // console.log("Soon I Will Add Like Blog Feature!");
   };
 
   const Likes = () => {
@@ -109,6 +107,7 @@ const Blog = () => {
                 onClick={() => {
                   dispatch(deleteBlog(blog._id));
                   navigate("/");
+                  window.location.reload(false);
                 }}
               >
                 Delete
@@ -128,7 +127,7 @@ const Blog = () => {
           <DetailWrapper>
             <div className="detail_1">
               <div className="like" onClick={!user?.user ? null : handleLike}>
-                <Likes />
+                {/* <Likes /> */}
               </div>
 
               <h4 className="time">{moment(blog.createdAt).fromNow()}</h4>

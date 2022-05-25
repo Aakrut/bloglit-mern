@@ -12,7 +12,7 @@ const getAllPosts = async (req, res) => {
     const limit = 8;
     const startIndex = (Number(page) - 1) * limit;
     const total = await Blog.countDocuments({});
-    const blog = await Blog.find({}).limit(limit).skip(startIndex);
+    const blog = await Blog.find({}).sort({createdAt:-1}).limit(limit).skip(startIndex);
 
     res.status(StatusCodes.OK).json({
       blog,

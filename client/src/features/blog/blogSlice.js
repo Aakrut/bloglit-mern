@@ -101,7 +101,6 @@ export const deleteBlog = createAsyncThunk(
 export const searchBlog = createAsyncThunk(
   `blog/searchBlog`,
   async (search, thunkAPI) => {
-    console.log(search);
     try {
       const resp = await axios.get(
         `/api/v1/blog/search/post?search=${search}`,
@@ -111,7 +110,6 @@ export const searchBlog = createAsyncThunk(
           },
         }
       );
-      console.log(resp.data);
       return resp.data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.response.data.msg);

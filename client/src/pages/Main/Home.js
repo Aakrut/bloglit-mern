@@ -40,12 +40,18 @@ const Home = () => {
           })}
         </BlogWrapper>
 
-        <Pagination
-          setCurrentPage={setCurrentPage}
-          numberOfPages={numberOfPages}
-          currentPage={currentPage}
-          dispatch={dispatch}
-        />
+        {blogs.length > 0 ? (
+          <Pagination
+            setCurrentPage={setCurrentPage}
+            numberOfPages={numberOfPages}
+            currentPage={currentPage}
+            dispatch={dispatch}
+          />
+        ) : (
+          <div className="blank">
+            <p className="p"> NO Blogs Added ! </p>
+          </div>
+        )}
       </ContentWrapper>
     </Wrapper>
   );
@@ -66,6 +72,17 @@ const Wrapper = styled.div``;
 const ContentWrapper = styled.div`
   max-width: 1234px;
   margin: 0 auto;
+
+  .blank {
+    text-align: center;
+  }
+
+  .p {
+    text-align: center;
+    font-family: "Inter", sans-serif;
+    font-size: 30px;
+    font-weight: 600;
+  }
 `;
 
 const BlogWrapper = styled.div`
@@ -73,6 +90,8 @@ const BlogWrapper = styled.div`
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 10px;
   margin: 20px 0;
+
+  
 
   @media only screen and (max-width: 640px) {
     grid-template-columns: repeat(1, 1fr);

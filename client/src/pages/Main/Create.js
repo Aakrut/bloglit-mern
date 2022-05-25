@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import { BsImage } from "react-icons/bs";
 import { createBlog, updateBlog } from "../../features/blog/blogSlice";
 import { SpinnerCircularSplit } from "spinners-react";
+import { useNavigate } from "react-router-dom";
 
 const Create = () => {
   const { isLoading, isEditing } = useSelector((state) => state.blog);
@@ -23,6 +24,8 @@ const Create = () => {
   const blogId = useSelector((state) => state.blog.editBlogId);
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (blogId) setValues(blog.blog);
@@ -43,11 +46,14 @@ const Create = () => {
 
     if (blogId) {
       dispatch(updateBlog({ blogId: blogId, blog: values }));
+      navigate("/");
       return;
     } else {
       dispatch(createBlog(values));
+      navigate("/");
       return;
     }
+    
   };
 
   if (isLoading) {
